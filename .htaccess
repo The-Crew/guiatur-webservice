@@ -16,9 +16,3 @@
 	Header set Cache-Control "max-age=604800"
 </FilesMatch>
 
-# Aumentando o tamanho limite do upload e de envio pelo metodo POST
-php_value upload_max_filesize 5M
-#php_value post_max_size 5M
-
-# Permitindo a funcao file_get_contents para o funcionamento do captcha do google (fale-conosco.php)
-php_value allow_url_fopen On

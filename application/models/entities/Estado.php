@@ -6,6 +6,14 @@ class Estado extends JsonGetter {
             $Uf,
             $Nome;
 
+    public static function fromJson($decoded_json) {
+        $obj = new Estado();
+        foreach ($decoded_json as $key=>$value) {
+            $obj->{$key} = $value;
+        }
+        return $obj;
+    }
+    
     public function getUf() {
         return $this->Uf;
     }

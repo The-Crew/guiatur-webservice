@@ -1,25 +1,35 @@
 <?php
 
-class Estado extends JsonGetter {
+class FormaPagamento extends JsonGetter {
 
     private
-            $Uf,
-            $Nome;
-
-    public function getUf() {
-        return $this->Uf;
-    }
-
-    public function getNome() {
-        return $this->Nome;
+            $Id,
+            $Descricao;
+    
+    public static function fromJson($decoded_json) {
+        $obj = new FormaPagamento();
+        foreach ($decoded_json as $key=>$value) {
+            $obj->{$key} = $value;
+        }
+        return $obj;
     }
     
-    public function setUf($uf) {
-        $this->Uf = $uf;
+    public function getId() {
+        return $this->Id;
     }
-    
-    public function setNome($nome) {
-        $this->Nome = $nome;
+
+    public function getDescricao() {
+        return $this->Descricao;
     }
+
+    public function setId($Id) {
+        $this->Id = $Id;
+    }
+
+    public function setDescricao($Descricao) {
+        $this->Descricao = $Descricao;
+    }
+
+
 
 }
