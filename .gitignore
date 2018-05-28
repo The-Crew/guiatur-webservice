@@ -8,7 +8,9 @@ application/logs/*
 
 !application/*/.htaccess
 
-composer.lock
+# Necessário para o Heroku
+!composer.lock
+!composer.json
 
 user_guide_src/build/*
 user_guide_src/cilexer/build/*
