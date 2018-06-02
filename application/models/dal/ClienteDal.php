@@ -3,6 +3,8 @@
 // DAL: Data Access Layer
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+require_once(APPPATH.'utils/Utils.php');
+
 class ClienteDal extends CI_Model {
 
     public function inserir($cliente_json) {
@@ -26,7 +28,7 @@ class ClienteDal extends CI_Model {
                 'cli_cep' => $cliente->getCep(),
                 'mun_id' => $cliente->getMunicipio()->getId(),
                 'cli_ultimo_acesso' => '0000-00-00 00:00:00',
-                'cli_uniqid' => 'abcdf',
+                'cli_uniqid' => Utils::gerarUniquid(),
                 'cli_data_confirmacao' => '0000-00-00 00:00:00'
             );
              
