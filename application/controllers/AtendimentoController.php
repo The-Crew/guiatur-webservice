@@ -15,4 +15,9 @@ class AtendimentoController extends CI_Controller {
         echo $atendimentoGateway->inserir($atendimento);
     }
     
+    public function listarTodos() {
+        $atendimentoGateway = new AtendimentoDal();
+        echo json_encode($atendimentoGateway->listarTodos());
+    }
+    
 }

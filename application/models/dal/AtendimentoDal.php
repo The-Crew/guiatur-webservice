@@ -12,58 +12,73 @@ class AtendimentoDal extends CI_Model {
             
             // Conectando ao banco de dados
             $this->load->database();
+            
+            $data = array (
+                'cli_id' => $atendimento->getCliente()->getId(),
+                'pro_id' => $atendimento->getProfissional()->getId(),
+                'ser_id' => $atendimento->getServico()->getId(),
+                'atd_data_agendado' => $atendimento->getDataAgendado(),
+                'atd_data_realizado' => $atendimento->getDataRealizado(),
+                'atd_endereco' => $atendimento->getEndereco(),
+                'atd_bairro' => $atendimento->getBairro(),
+                'atd_cep' => $atendimento->getCep(),
+                'mun_id' => $atendimento->getMunicipio()->getId(),
+                'atd_preco' => $atendimento->getPreco(),
+                'atd_desconto' => $atendimento->getDesconto(),
+                'atd_custo_adicional' => $atendimento->getCustoAdicional(),
+                'atd_situacao_pagamento' => $atendimento->getSituacao(),
+                'atd_custo_transporte' => $atendimento->getCustoTransporte(),
+                'atd_observacao' => $atendimento->getObservacao()
+            );
+             
+            $this->db->insert('tb_atendimento', $data);
+            return $this->db->insert_id();
+            
+        } finally {
+            if (isSet($this->db))
+                $this->db->close();
+        }
+    }
+    
+    public function listarTodos() {
+        try {
 
-            $sql = 'INSERT INTO tb_atendimento (';
-            $sql .= 'cli_id, ';
-            $sql .= 'pro_id, ';
-            $sql .= 'ser_id, ';
-            $sql .= 'atd_data_agendado, ';
-            $sql .= 'atd_data_realizado, ';
-            $sql .= 'atd_data_cadastro, ';
-            $sql .= 'atd_endereco, ';
-            $sql .= 'atd_bairro, ';
-            $sql .= 'atd_cep, ';
-            $sql .= 'mun_id, ';
-            $sql .= 'atd_status, ';
-            $sql .= 'atd_preco, ';
-            $sql .= 'atd_desconto, ';
-            $sql .= 'atd_custo_adicional, ';
-            $sql .= 'atd_situacao_pagamento, ';
-            $sql .= 'atd_custo_traNsporte, ';
-            $sql .= 'atd_observacao, ';
-            $sql .= 'atd_avaliacao_data, ';
-            $sql .= 'atd_avaliacao_satisfacao, ';
-            $sql .= 'atd_avaliacao_comentario ';
-            $sql .= ') VALUES (';
-            $sql .= $this->db->escape($atendimento->getCliente()->getId()).', ';
-            $sql .= $this->db->escape($atendimento->getProfissional()->getId()).', ';
-            $sql .= $this->db->escape($atendimento->getServico()->getId()).', ';
-            $sql .= $this->db->escape($atendimento->getDataAgendado()).', ';
-            $sql .= $this->db->escape($atendimento->getDataRealizado()).', ';
-            $sql .= $this->db->escape($atendimento->getDataCadastro()).', ';
-            $sql .= $this->db->escape($atendimento->getEndereco()).', ';
-            $sql .= $this->db->escape($atendimento->getBairro()).', ';
-            $sql .= $this->db->escape($atendimento->getCep()).', ';
-            $sql .= $this->db->escape($atendimento->getMunicipio()->getId()).', ';
-            $sql .= $this->db->escape($atendimento->getStatus()).', ';
-            $sql .= $this->db->escape($atendimento->getPreco()).', ';
-            $sql .= $this->db->escape($atendimento->getDesconto()).', ';
-            $sql .= $this->db->escape($atendimento->getCustoAdicional()).', ';
-            $sql .= $this->db->escape($atendimento->getSituacao()).', ';
-            $sql .= $this->db->escape($atendimento->getCustoTransporte()).', ';
-            $sql .= $this->db->escape($atendimento->getObservacao()).', ';
-            $sql .= $this->db->escape($atendimento->getAvaliacaoData()).', ';
-            $sql .= $this->db->escape($atendimento->getAvaliacaoSatisfacao()).', ';
-            $sql .= $this->db->escape($atendimento->getAvaliacaoComentario());
-            $sql .= '); ';
-            //$sql .= 'SELECT LAST_INSERT_ID();';
+            // Conectando ao banco de dados
+            $this->load->database();
+
+            $this->db->select('*');
+            $query = $this->db->get('tb_atendimento');
+
+            foreach ($query->result() as $row)
+            {
+                $atendimento = new Atendimento();
+                $atendimento->setId($row->atd_id);
+                $atendimento->setCliente((new Cliente())->setId($row->cli_id));
+                $atendimento->setProfissional((new Profissional())->setId($row->pro_id));
+                $atendimento->setServico((new Servico())->setId($row->ser_id));
+                $atendimento->setDataAgendado($row->atd_data_agendado);
+                $atendimento->setDataRealizado($row->atd_data_realizado);
+                $atendimento->setDataCadastro($row->atd_data_cadastro);
+                $atendimento->setEndereco($row->atd_endereco);
+                $atendimento->setBairro($row->atd_bairro);
+                $atendimento->setCep($row->atd_cep);
+                $atendimento->setMunicipio((new Municipio())->setId($row->mun_id));
+                $atendimento->setStatus($row->atd_status);
+                $atendimento->setPreco($row->atd_preco);
+                $atendimento->setDesconto($row->atd_desconto);
+                $atendimento->setCustoAdicional($row->atd_custo_adicional);
+                $atendimento->setSituacao($row->atd_situacao_pagamento);
+                $atendimento->setCustoTransporte($row->atd_custo_transporte);
+                $atendimento->setObservacao($row->atd_observacao);
+                $atendimento->setAvaliacaoData($row->atd_avaliacao_data);
+                $atendimento->setAvaliacaoSatisfacao($row->atd_avaliacao_satisfacao);
+                $atendimento->setAvaliacaoComentario($row->atd_avaliacao_comentario);
+
+                $list[] = $atendimento->jsonSerialize();
+            }
             
-            //die($sql);
-            $query = $this->db->query($sql);
-            
-            //return $query->result()[0];
-            return true;
-            
+            return $list;
+
         } finally {
             if (isSet($this->db))
                 $this->db->close();

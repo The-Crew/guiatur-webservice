@@ -149,17 +149,10 @@ class Atendimento extends JsonGetter {
     }
 
     public function setCliente($Cliente) {
-        //$this->Cliente = new Cliente();
-        //foreach($Cliente as $key=>$value){
-            //$this->{$key} = $value;
-        //    $atd->setCliente($value);
-        //    die(print_r($atd));
-        //    $atd->setCliente($value);
-        //}
         $this->Cliente = $Cliente;
     }
 
-    public function seProfissional($Profissional) {
+    public function setProfissional($Profissional) {
         $this->Profissional = $Profissional;
     }
 
