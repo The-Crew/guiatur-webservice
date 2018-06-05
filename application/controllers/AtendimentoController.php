@@ -17,7 +17,19 @@ class AtendimentoController extends CI_Controller {
     
     public function listarTodos() {
         $atendimentoGateway = new AtendimentoDal();
-        echo json_encode($atendimentoGateway->listarTodos());
+        echo json_encode($atendimentoGateway->listarTodos(), JSON_PRETTY_PRINT);
+    }
+    
+    public function listarNaoConcluidos() {
+        $cliente = json_decode(file_get_contents('php://input'));
+        $atendimentoGateway = new AtendimentoDal();
+        echo json_encode($atendimentoGateway->listarNaoConcluidos($cliente), JSON_PRETTY_PRINT);
+    }
+    
+    public function listarConcluidos() {
+        $cliente = json_decode(file_get_contents('php://input'));
+        $atendimentoGateway = new AtendimentoDal();
+        echo json_encode($atendimentoGateway->listarConcluidos($cliente), JSON_PRETTY_PRINT);
     }
     
 }

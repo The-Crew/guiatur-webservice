@@ -53,16 +53,160 @@ class AtendimentoDal extends CI_Model {
             {
                 $atendimento = new Atendimento();
                 $atendimento->setId($row->atd_id);
-                $atendimento->setCliente((new Cliente())->setId($row->cli_id));
-                $atendimento->setProfissional((new Profissional())->setId($row->pro_id));
-                $atendimento->setServico((new Servico())->setId($row->ser_id));
+                
+                $cliente = new Cliente();
+                $cliente->setId($row->cli_id);
+                $atendimento->setCliente($cliente->jsonSerialize());
+                
+                $profissional = new Profissional();
+                $profissional->setId($row->pro_id);
+                $atendimento->setProfissional($profissional->jsonSerialize());
+                
+                $servico = new Servico();
+                $servico->setId($row->ser_id);
+                $atendimento->setServico($servico->jsonSerialize());
+                
                 $atendimento->setDataAgendado($row->atd_data_agendado);
                 $atendimento->setDataRealizado($row->atd_data_realizado);
                 $atendimento->setDataCadastro($row->atd_data_cadastro);
                 $atendimento->setEndereco($row->atd_endereco);
                 $atendimento->setBairro($row->atd_bairro);
                 $atendimento->setCep($row->atd_cep);
-                $atendimento->setMunicipio((new Municipio())->setId($row->mun_id));
+                
+                $municipio = new Municipio();
+                $municipio->setId($row->mun_id);
+                $atendimento->setMunicipio($municipio->jsonSerialize());
+                
+                $atendimento->setStatus($row->atd_status);
+                $atendimento->setPreco($row->atd_preco);
+                $atendimento->setDesconto($row->atd_desconto);
+                $atendimento->setCustoAdicional($row->atd_custo_adicional);
+                $atendimento->setSituacao($row->atd_situacao_pagamento);
+                $atendimento->setCustoTransporte($row->atd_custo_transporte);
+                $atendimento->setObservacao($row->atd_observacao);
+                $atendimento->setAvaliacaoData($row->atd_avaliacao_data);
+                $atendimento->setAvaliacaoSatisfacao($row->atd_avaliacao_satisfacao);
+                $atendimento->setAvaliacaoComentario($row->atd_avaliacao_comentario);
+
+                $list[] = $atendimento->jsonSerialize();
+            }
+            
+            return $list;
+
+        } finally {
+            if (isSet($this->db))
+                $this->db->close();
+        }
+    }
+    
+    public function listarNaoConcluidos($cliente_json) {
+        try {
+            
+            $cliente = Cliente::fromJson($cliente_json);
+            
+            // Conectando ao banco de dados
+            $this->load->database();
+            
+            $this->db->select('*');
+            $this->db->where('cli_id', $cliente->getId());
+            $this->db->where('atd_data_realizado <>', '0000-00-00 00:00:00');
+            //die(print_r($this->db->get_compiled_select('tb_atendimento')));
+            $query = $this->db->get('tb_atendimento');
+            
+            $list = null;
+            foreach ($query->result() as $row)
+            {
+                $atendimento = new Atendimento();
+                $atendimento->setId($row->atd_id);
+                
+                $cliente = new Cliente();
+                $cliente->setId($row->cli_id);
+                $atendimento->setCliente($cliente->jsonSerialize());
+                
+                $profissional = new Profissional();
+                $profissional->setId($row->pro_id);
+                $atendimento->setProfissional($profissional->jsonSerialize());
+                
+                $servico = new Servico();
+                $servico->setId($row->ser_id);
+                $atendimento->setServico($servico->jsonSerialize());
+                
+                $atendimento->setDataAgendado($row->atd_data_agendado);
+                $atendimento->setDataRealizado($row->atd_data_realizado);
+                $atendimento->setDataCadastro($row->atd_data_cadastro);
+                $atendimento->setEndereco($row->atd_endereco);
+                $atendimento->setBairro($row->atd_bairro);
+                $atendimento->setCep($row->atd_cep);
+                
+                $municipio = new Municipio();
+                $municipio->setId($row->mun_id);
+                $atendimento->setMunicipio($municipio->jsonSerialize());
+                
+                $atendimento->setStatus($row->atd_status);
+                $atendimento->setPreco($row->atd_preco);
+                $atendimento->setDesconto($row->atd_desconto);
+                $atendimento->setCustoAdicional($row->atd_custo_adicional);
+                $atendimento->setSituacao($row->atd_situacao_pagamento);
+                $atendimento->setCustoTransporte($row->atd_custo_transporte);
+                $atendimento->setObservacao($row->atd_observacao);
+                $atendimento->setAvaliacaoData($row->atd_avaliacao_data);
+                $atendimento->setAvaliacaoSatisfacao($row->atd_avaliacao_satisfacao);
+                $atendimento->setAvaliacaoComentario($row->atd_avaliacao_comentario);
+
+                $list[] = $atendimento->jsonSerialize();
+            }
+            
+            return $list;
+
+        } finally {
+            if (isSet($this->db))
+                $this->db->close();
+        }
+    }
+    
+    public function listarConcluidos($cliente_json) {
+        try {
+            
+            $cliente = Cliente::fromJson($cliente_json);
+            
+            // Conectando ao banco de dados
+            $this->load->database();
+            
+            $this->db->select('*');
+            $this->db->where('cli_id', $cliente->getId());
+            $this->db->where('atd_data_realizado', '0000-00-00 00:00:00');
+            //die(print_r($this->db->get_compiled_select('tb_atendimento')));
+            $query = $this->db->get('tb_atendimento');
+            
+            $list = null;
+            foreach ($query->result() as $row)
+            {
+                $atendimento = new Atendimento();
+                $atendimento->setId($row->atd_id);
+                
+                $cliente = new Cliente();
+                $cliente->setId($row->cli_id);
+                $atendimento->setCliente($cliente->jsonSerialize());
+                
+                $profissional = new Profissional();
+                $profissional->setId($row->pro_id);
+                $atendimento->setProfissional($profissional->jsonSerialize());
+                
+                $servico = new Servico();
+                $servico->setId($row->ser_id);
+                $atendimento->setServico($servico->jsonSerialize());
+                
+                $atendimento->setDataAgendado($row->atd_data_agendado);
+                $atendimento->setDataRealizado($row->atd_data_realizado);
+                $atendimento->setDataCadastro($row->atd_data_cadastro);
+                $atendimento->setEndereco($row->atd_endereco);
+                $atendimento->setBairro($row->atd_bairro);
+                $atendimento->setCep($row->atd_cep);
+                
+                $municipio = new Municipio();
+                $municipio->setId($row->mun_id);
+                $atendimento->setMunicipio($municipio->jsonSerialize());
+                
                 $atendimento->setStatus($row->atd_status);
                 $atendimento->setPreco($row->atd_preco);
                 $atendimento->setDesconto($row->atd_desconto);

@@ -15,4 +15,10 @@ class ClienteController extends CI_Controller {
         echo $atendimentoGateway->inserir($cliente);
     }
     
+    public function logar() {
+        $cliente = json_decode(file_get_contents('php://input'));
+        $clienteGateway = new ClienteDal();
+        echo json_encode($clienteGateway->logar($cliente), JSON_PRETTY_PRINT);
+    }
+    
 }
