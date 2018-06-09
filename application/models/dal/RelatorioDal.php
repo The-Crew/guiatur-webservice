@@ -197,4 +197,97 @@ class RelatorioDal extends CI_Model {
                 $this->db->close();
         }
     }
+    
+   public function listarSatisfacaoPorBairroCliente($cliente_json, $ano) {
+        try {
+            
+            $cliente = Cliente::fromJson($cliente_json);
+            $bairro = $cliente->getBairro();
+            
+            // Conectando ao banco de dados
+            $this->load->database();
+            
+            $this->db->select('MONTH(atd_data_realizado) AS mes');
+            $this->db->select('AVG(atd_avaliacao_satisfacao) AS nota');
+            $this->db->join('tb_cliente', 'tb_atendimento.cli_id = tb_cliente.cli_id');
+            if (isSet($bairro) && $bairro != '')
+                $this->db->where('cli_bairro', $bairro);
+            $this->db->where('YEAR(atd_data_realizado)', $ano);
+            $this->db->where('atd_avaliacao_satisfacao IS NOT NULL');
+            $this->db->group_by("mes");
+            //die(print_r($this->db->get_compiled_select('tb_atendimento')));
+            $query = $this->db->get('tb_atendimento');
+            
+            $anoObj = new Ano();
+            foreach ($query->result() as $row)
+            {
+                switch ($row->mes) {
+                    case 1:  $anoObj->setJan($row->nota); break;
+                    case 2:  $anoObj->setFev($row->nota); break;
+                    case 3:  $anoObj->setMar($row->nota); break;
+                    case 4:  $anoObj->setAbr($row->nota); break;
+                    case 5:  $anoObj->setMai($row->nota); break;
+                    case 6:  $anoObj->setJun($row->nota); break;
+                    case 7:  $anoObj->setJul($row->nota); break;
+                    case 8:  $anoObj->setAgo($row->nota); break;
+                    case 9:  $anoObj->setSet($row->nota); break;
+                    case 10: $anoObj->setOut($row->nota); break;
+                    case 11: $anoObj->setNov($row->nota); break;
+                    case 12: $anoObj->setDez($row->nota); break;
+                }
+            }
+            
+            return $anoObj->jsonSerialize();
+
+        } finally {
+            if (isSet($this->db))
+                $this->db->close();
+        }
+    }
+    
+    public function listarSatisfacaoPorServico($servico_json, $ano) {
+        try {
+            
+            $servico = Servico::fromJson($servico_json);
+            $idServico = $servico->getId();
+            
+            // Conectando ao banco de dados
+            $this->load->database();
+            
+            $this->db->select('MONTH(atd_data_realizado) AS mes');
+            $this->db->select('AVG(atd_avaliacao_satisfacao) AS nota');
+            if (isSet($idServico))
+                $this->db->where('tb_atendimento.ser_id', $idServico);
+            $this->db->where('YEAR(atd_data_realizado)', $ano);
+            $this->db->where('atd_avaliacao_satisfacao IS NOT NULL');
+            $this->db->group_by("mes");
+            //die(print_r($this->db->get_compiled_select('tb_atendimento')));
+            $query = $this->db->get('tb_atendimento');
+            
+            $anoObj = new Ano();
+            foreach ($query->result() as $row)
+            {
+                switch ($row->mes) {
+                    case 1:  $anoObj->setJan($row->nota); break;
+                    case 2:  $anoObj->setFev($row->nota); break;
+                    case 3:  $anoObj->setMar($row->nota); break;
+                    case 4:  $anoObj->setAbr($row->nota); break;
+                    case 5:  $anoObj->setMai($row->nota); break;
+                    case 6:  $anoObj->setJun($row->nota); break;
+                    case 7:  $anoObj->setJul($row->nota); break;
+                    case 8:  $anoObj->setAgo($row->nota); break;
+                    case 9:  $anoObj->setSet($row->nota); break;
+                    case 10: $anoObj->setOut($row->nota); break;
+                    case 11: $anoObj->setNov($row->nota); break;
+                    case 12: $anoObj->setDez($row->nota); break;
+                }
+            }
+            
+            return $anoObj->jsonSerialize();
+
+        } finally {
+            if (isSet($this->db))
+                $this->db->close();
+        }
+    }
 }
