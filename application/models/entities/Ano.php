@@ -33,7 +33,7 @@ class Ano extends JsonGetter {
 
     
     public static function fromJson($decoded_json) {
-        $obj = new Mes();
+        $obj = new Ano();
         foreach ($decoded_json as $key=>$value) {
             $obj->{$key} = $value;
         }

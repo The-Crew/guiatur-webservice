@@ -127,5 +127,29 @@ class RelatorioDal extends CI_Model {
                 $this->db->close();
         }
     }
+    
+    public function listarLucroMensal($ano) {
+            
+        $faturamento = Ano::fromJson($this->listarFaturamento($ano));
+        $gastos = Ano::fromJson($this->listarGastosServicos($ano));
+
+        $anoObj = new Ano();
+        
+        $anoObj->setJan($faturamento->getJan() - $gastos->getJan());
+        $anoObj->setFev($faturamento->getFev() - $gastos->getFev());
+        $anoObj->setMar($faturamento->getMar() - $gastos->getMar());
+        $anoObj->setAbr($faturamento->getAbr() - $gastos->getAbr());
+        $anoObj->setMai($faturamento->getMai() - $gastos->getMai());
+        $anoObj->setJun($faturamento->getJun() - $gastos->getJun());
+        $anoObj->setJul($faturamento->getJul() - $gastos->getJul());
+        $anoObj->setAgo($faturamento->getAgo() - $gastos->getAgo());
+        $anoObj->setSet($faturamento->getSet() - $gastos->getSet());
+        $anoObj->setOut($faturamento->getOut() - $gastos->getOut());
+        $anoObj->setNov($faturamento->getNov() - $gastos->getNov());
+        $anoObj->setDez($faturamento->getDez() - $gastos->getDez());
+
+        return $anoObj->jsonSerialize();
+
+    }
 
 }
