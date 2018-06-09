@@ -22,14 +22,32 @@ class RelatorioController extends CI_Controller {
         echo json_encode($relatorioGateway->listarFaturamento(2018), JSON_PRETTY_PRINT);
     }
     
+    public function listarFaturamentoPorServico() {
+        $servico = json_decode(file_get_contents('php://input'));
+        $relatorioGateway = new RelatorioDal();
+        echo json_encode($relatorioGateway->listarFaturamentoPorServico($servico, 2018), JSON_PRETTY_PRINT);
+    }
+    
     public function listarGastosServicos() {
         $relatorioGateway = new RelatorioDal();
         echo json_encode($relatorioGateway->listarGastosServicos(2018), JSON_PRETTY_PRINT);
     }
     
+    public function listarGastosServicosPorServico() {
+        $servico = json_decode(file_get_contents('php://input'));
+        $relatorioGateway = new RelatorioDal();
+        echo json_encode($relatorioGateway->listarGastosServicosPorServico($servico, 2018), JSON_PRETTY_PRINT);
+    }
+    
     public function listarLucroMensal() {
         $relatorioGateway = new RelatorioDal();
         echo json_encode($relatorioGateway->listarLucroMensal(2018), JSON_PRETTY_PRINT);
+    }
+    
+    public function listarLucroMensalPorServico() {
+        $servico = json_decode(file_get_contents('php://input'));
+        $relatorioGateway = new RelatorioDal();
+        echo json_encode($relatorioGateway->listarLucroMensalPorServico($servico, 2018), JSON_PRETTY_PRINT);
     }
     
     public function listarSatisfacaoPorProfissional() {
