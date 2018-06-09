@@ -109,7 +109,7 @@ class AtendimentoDal extends CI_Model {
             
             $this->db->select('*');
             $this->db->where('cli_id', $cliente->getId());
-            $this->db->where('atd_data_realizado <>', '0000-00-00 00:00:00');
+            $this->db->where('atd_status', 'A');
             //die(print_r($this->db->get_compiled_select('tb_atendimento')));
             $query = $this->db->get('tb_atendimento');
             
@@ -174,7 +174,7 @@ class AtendimentoDal extends CI_Model {
             
             $this->db->select('*');
             $this->db->where('cli_id', $cliente->getId());
-            $this->db->where('atd_data_realizado', '0000-00-00 00:00:00');
+            $this->db->where('atd_status', 'R');
             //die(print_r($this->db->get_compiled_select('tb_atendimento')));
             $query = $this->db->get('tb_atendimento');
             
