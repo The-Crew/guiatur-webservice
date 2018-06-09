@@ -16,6 +16,12 @@ class RelatorioController extends CI_Controller {
         $relatorioGateway = new RelatorioDal();
         echo json_encode($relatorioGateway->listarCancelamentos(2018), JSON_PRETTY_PRINT);
     }
+    
+    public function listarCancelamentosPorBairro() {
+        $cliente = json_decode(file_get_contents('php://input'));
+        $relatorioGateway = new RelatorioDal();
+        echo json_encode($relatorioGateway->listarCancelamentosPorBairro($cliente, 2018), JSON_PRETTY_PRINT);
+    }
 
     public function listarFaturamento() {
         $relatorioGateway = new RelatorioDal();

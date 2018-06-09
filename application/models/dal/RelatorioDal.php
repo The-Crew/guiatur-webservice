@@ -46,6 +46,53 @@ class RelatorioDal extends CI_Model {
         }
     }
     
+    public function listarCancelamentosPorBairro($cliente_json, $ano) {
+        try {
+            
+            $cliente = Cliente::fromJson($cliente_json);
+            $bairro = $cliente->getBairro();
+            
+            // Conectando ao banco de dados
+            $this->load->database();
+            
+            $this->db->select('MONTH(atd_data_agendado) AS mes');
+            $this->db->select('COUNT(*) AS qtd');
+            $this->db->join('tb_cliente', 'tb_atendimento.cli_id = tb_cliente.cli_id');
+            if (isSet($bairro) && $bairro != '')
+                $this->db->where('cli_bairro', $bairro);
+            $this->db->where('atd_status', 'C');
+            $this->db->where('YEAR(atd_data_agendado)', $ano);
+            $this->db->group_by("mes");
+            //die(print_r($this->db->get_compiled_select('tb_atendimento')));
+            $query = $this->db->get('tb_atendimento');
+            
+            $anoObj = new Ano();
+            foreach ($query->result() as $row)
+            {
+                switch ($row->mes) {
+                    case 1:  $anoObj->setJan($row->qtd); break;
+                    case 2:  $anoObj->setFev($row->qtd); break;
+                    case 3:  $anoObj->setMar($row->qtd); break;
+                    case 4:  $anoObj->setAbr($row->qtd); break;
+                    case 5:  $anoObj->setMai($row->qtd); break;
+                    case 6:  $anoObj->setJun($row->qtd); break;
+                    case 7:  $anoObj->setJul($row->qtd); break;
+                    case 8:  $anoObj->setAgo($row->qtd); break;
+                    case 9:  $anoObj->setSet($row->qtd); break;
+                    case 10: $anoObj->setOut($row->qtd); break;
+                    case 11: $anoObj->setNov($row->qtd); break;
+                    case 12: $anoObj->setDez($row->qtd); break;
+                }
+            }
+            
+            return $anoObj->jsonSerialize();
+
+        } finally {
+            if (isSet($this->db))
+                $this->db->close();
+        }
+    }
+    
     public function listarFaturamento($ano) {
         try {
             
