@@ -19,4 +19,9 @@ class RelatorioController extends CI_Controller {
         echo json_encode($relatorioGateway->listarFaturamento(2018), JSON_PRETTY_PRINT);
     }
     
+    public function listarGastosServicos() {
+        $relatorioGateway = new RelatorioDal();
+        echo json_encode($relatorioGateway->listarGastosServicos(2018), JSON_PRETTY_PRINT);
+    }
+    
 }
