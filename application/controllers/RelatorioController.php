@@ -7,6 +7,7 @@ class RelatorioController extends CI_Controller {
         parent::__construct();
         $this->load->model('dal/RelatorioDal');
         $this->load->model('entities/Ano');
+        $this->load->model('entities/Profissional');
     }
     
     public function listarCancelamentos() {
@@ -27,5 +28,11 @@ class RelatorioController extends CI_Controller {
     public function listarLucroMensal() {
         $relatorioGateway = new RelatorioDal();
         echo json_encode($relatorioGateway->listarLucroMensal(2018), JSON_PRETTY_PRINT);
+    }
+    
+    public function listarSatisfacaoPorProfissional() {
+        $profissional = json_decode(file_get_contents('php://input'));
+        $profissionalGateway = new RelatorioDal();
+        echo json_encode($profissionalGateway->listarSatisfacaoPorProfissional($profissional, 2018), JSON_PRETTY_PRINT);
     }
 }
