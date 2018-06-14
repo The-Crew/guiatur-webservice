@@ -362,7 +362,7 @@ class RelatorioDal extends CI_Model {
         }
     }
     
-   public function listarSatisfacaoPorBairroCliente($cliente_json, $ano) {
+   public function listarSatisfacaoPorBairroAtendimento($cliente_json, $ano) {
         try {
             
             $cliente = Cliente::fromJson($cliente_json);
@@ -373,9 +373,8 @@ class RelatorioDal extends CI_Model {
             
             $this->db->select('MONTH(atd_data_realizado) AS mes');
             $this->db->select('AVG(atd_avaliacao_satisfacao) AS nota');
-            $this->db->join('tb_cliente', 'tb_atendimento.cli_id = tb_cliente.cli_id');
             if (isSet($bairro) && $bairro != '')
-                $this->db->where('cli_bairro', $bairro);
+                $this->db->where('atd_bairro', $bairro);
             $this->db->where('YEAR(atd_data_realizado)', $ano);
             $this->db->where('atd_avaliacao_satisfacao IS NOT NULL');
             $this->db->group_by("mes");
