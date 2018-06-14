@@ -11,6 +11,7 @@ class RelatorioController extends CI_Controller {
         $this->load->model('entities/Profissional');
         $this->load->model('entities/Cliente');
         $this->load->model('entities/Servico');
+        $this->load->model('entities/Atendimento');
     }
 
     public function listarCancelamentos() {
@@ -63,15 +64,20 @@ class RelatorioController extends CI_Controller {
         echo json_encode($relatorioGateway->listarSatisfacaoPorProfissional($profissional, 2018), JSON_PRETTY_PRINT);
     }
 
-    public function listarSatisfacaoPorBairroCliente() {
+    public function listarSatisfacaoPorBairroAtendimento() {
         $cliente = json_decode(file_get_contents('php://input'));
         $relatorioGateway = new RelatorioDal();
-        echo json_encode($relatorioGateway->listarSatisfacaoPorBairroCliente($cliente, 2018), JSON_PRETTY_PRINT);
+        echo json_encode($relatorioGateway->listarSatisfacaoPorBairroAtendimento($cliente, 2018), JSON_PRETTY_PRINT);
     }
 
     public function listarSatisfacaoPorServico() {
         $servico = json_decode(file_get_contents('php://input'));
         $relatorioGateway = new RelatorioDal();
         echo json_encode($relatorioGateway->listarSatisfacaoPorServico($servico, 2018), JSON_PRETTY_PRINT);
+    }
+    
+    public function listarBairrosAtendimento() {
+        $relatorioGateway = new RelatorioDal();
+        echo json_encode($relatorioGateway->listarBairrosAtendimento(), JSON_PRETTY_PRINT);
     }
 }

@@ -95,4 +95,23 @@ class ClienteDal extends CI_Model {
                 $this->db->close();
         }
     }
+    
+    public function obterQuantidade() {
+        try {
+            
+            // Conectando ao banco de dados
+            $this->load->database();
+            
+            $this->db->select('COUNT(1) AS qtd');
+            $this->db->where('cli_status', 'A');
+            //die(print_r($this->db->get_compiled_select('tb_cliente')));
+            $query = $this->db->get('tb_cliente');
+            
+            return (int)$query->result()[0]->qtd;
+
+        } finally {
+            if (isSet($this->db))
+                $this->db->close();
+        }
+    }
 }

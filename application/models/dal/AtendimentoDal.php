@@ -49,6 +49,7 @@ class AtendimentoDal extends CI_Model {
             $this->db->select('*');
             $query = $this->db->get('tb_atendimento');
 
+            $list = null;
             foreach ($query->result() as $row)
             {
                 $atendimento = new Atendimento();
