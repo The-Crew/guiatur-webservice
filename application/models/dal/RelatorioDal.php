@@ -453,4 +453,30 @@ class RelatorioDal extends CI_Model {
                 $this->db->close();
         }
     }
+    
+    public function listarBairrosAtendimento() {
+        try {
+            
+            // Conectando ao banco de dados
+            $this->load->database();
+            
+            $this->db->distinct('atd_bairro');
+            //die(print_r($this->db->get_compiled_select('tb_atendimento')));
+            $query = $this->db->get('tb_atendimento');
+            
+            $list = null;
+            foreach ($query->result() as $row)
+            {
+                $atdObj = new Atendimento();
+                $atdObj->setBairro($row->atd_bairro);
+                $list[] = $atdObj->jsonSerialize();
+            }
+            
+            return $list;
+
+        } finally {
+            if (isSet($this->db))
+                $this->db->close();
+        }
+    }
 }
