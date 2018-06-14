@@ -63,10 +63,10 @@ class RelatorioController extends CI_Controller {
         echo json_encode($relatorioGateway->listarSatisfacaoPorProfissional($profissional, 2018), JSON_PRETTY_PRINT);
     }
 
-    public function listarSatisfacaoPorBairroCliente() {
+    public function listarSatisfacaoPorBairroAtendimento() {
         $cliente = json_decode(file_get_contents('php://input'));
         $relatorioGateway = new RelatorioDal();
-        echo json_encode($relatorioGateway->listarSatisfacaoPorBairroCliente($cliente, 2018), JSON_PRETTY_PRINT);
+        echo json_encode($relatorioGateway->listarSatisfacaoPorBairroAtendimento($cliente, 2018), JSON_PRETTY_PRINT);
     }
 
     public function listarSatisfacaoPorServico() {
