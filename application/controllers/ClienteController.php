@@ -21,4 +21,9 @@ class ClienteController extends CI_Controller {
         echo json_encode($clienteGateway->logar($cliente), JSON_PRETTY_PRINT);
     }
     
+    public function obterQuantidade() {
+        $clienteGateway = new ClienteDal();
+        echo $clienteGateway->obterQuantidade();
+    }
+    
 }
