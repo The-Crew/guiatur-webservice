@@ -39,4 +39,10 @@ class AtendimentoController extends CI_Controller {
         echo json_encode($atendimentoGateway->cancelar($atendimento), JSON_PRETTY_PRINT);
     }
 
+    public function avaliar() {
+        $atendimento = json_decode(file_get_contents('php://input'));
+        $atendimentoGateway = new AtendimentoDal();
+        echo json_encode($atendimentoGateway->avaliar($atendimento), JSON_PRETTY_PRINT);
+    }
+
 }

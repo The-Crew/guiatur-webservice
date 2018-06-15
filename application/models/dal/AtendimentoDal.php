@@ -248,4 +248,22 @@ class AtendimentoDal extends CI_Model {
         }
     }
 
+    public function avaliar($atendimento_json) {
+        try {
+
+            $atendimento = Atendimento::fromJson($atendimento_json);
+            // Conectando ao banco de dados
+            $this->load->database();
+
+            $this->db->where('atd_id', $atendimento->getId());
+            $this->db->set('atd_avaliacao_satisfacao', $atendimento->getAvaliacaoSatisfacao());
+
+            return $this->db->update('tb_atendimento');
+
+        } finally {
+            if (isSet($this->db))
+                $this->db->close();
+        }
+    }
+
 }
