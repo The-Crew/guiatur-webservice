@@ -21,4 +21,10 @@ class ServicoController extends CI_Controller {
         echo json_encode($servicoGateway->listarTodos());
     }
 
+    public function obterServico() {
+        $servico = json_decode(file_get_contents('php://input'));
+        $servicoGateway = new ServicoDal();
+        echo json_encode($servicoGateway->obterServico($servico));
+    }
+
 }

@@ -8,25 +8,25 @@ class ServicoDal extends CI_Model {
     public function inserir($servico_json) {
         try {
             $servico = Servico::fromJson($servico_json);
-            
+
             // Conectando ao banco de dados
             $this->load->database();
-            
+
             $data = array (
                 'ser_descricao' => $servico->getDescricao(),
                 'ser_custo_base' => $servico->getCustoBase(),
                 'ser_status' => 'A'
             );
-             
+
             $this->db->insert('tb_servico', $data);
             return $this->db->insert_id();
-            
+
         } finally {
             if (isSet($this->db))
                 $this->db->close();
         }
     }
-    
+
     public function listarTodos() {
         try {
 
@@ -47,8 +47,34 @@ class ServicoDal extends CI_Model {
 
                 $list[] = $servico->jsonSerialize();
             }
-            
+
             return $list;
+
+        } finally {
+            if (isSet($this->db))
+                $this->db->close();
+        }
+    }
+
+    public function obterServico($servico_json) {
+        try {
+            $servico = Servico::fromJson($servico_json);
+
+            // Conectando ao banco de dados
+            $this->load->database();
+
+            $this->db->select('*');
+            $this->db->where('ser_id', $servico->getId());
+
+            $row = $this->db->get('tb_servico')->result()[0];
+
+            $servico = new Servico();
+            $servico->setId($row->ser_id);
+            $servico->setDescricao($row->ser_descricao);
+            $servico->setStatus($row->ser_status);
+            $servico->setCustoBase($row->ser_custo_base);
+
+            return $servico->jsonSerialize();
 
         } finally {
             if (isSet($this->db))
