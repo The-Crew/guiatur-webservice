@@ -110,6 +110,7 @@ class AtendimentoDal extends CI_Model {
 
             $this->db->select('*');
             $this->db->where('cli_id', $cliente->getId());
+            $this->db->join('tb_servico', 'tb_atendimento.ser_id = tb_servico.ser_id');
             $this->db->where('atd_status', 'A');
             //die(print_r($this->db->get_compiled_select('tb_atendimento')));
             $query = $this->db->get('tb_atendimento');
@@ -130,6 +131,7 @@ class AtendimentoDal extends CI_Model {
 
                 $servico = new Servico();
                 $servico->setId($row->ser_id);
+                $servico->setDescricao($row->ser_descricao);
                 $atendimento->setServico($servico->jsonSerialize());
 
                 $atendimento->setDataAgendado($row->atd_data_agendado);
@@ -174,6 +176,7 @@ class AtendimentoDal extends CI_Model {
             $this->load->database();
 
             $this->db->select('*');
+            $this->db->join('tb_servico', 'tb_atendimento.ser_id = tb_servico.ser_id');
             $this->db->where('cli_id', $cliente->getId());
             $this->db->where('atd_status', 'R');
             //die(print_r($this->db->get_compiled_select('tb_atendimento')));
@@ -195,6 +198,7 @@ class AtendimentoDal extends CI_Model {
 
                 $servico = new Servico();
                 $servico->setId($row->ser_id);
+                $servico->setDescricao($row->ser_descricao);
                 $atendimento->setServico($servico->jsonSerialize());
 
                 $atendimento->setDataAgendado($row->atd_data_agendado);
