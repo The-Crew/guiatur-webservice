@@ -32,4 +32,10 @@ class AtendimentoController extends CI_Controller {
         echo json_encode($atendimentoGateway->listarConcluidos($cliente), JSON_PRETTY_PRINT);
     }
     
+    public function obterQuantidadePorStatus() {
+        $atendimento = json_decode(file_get_contents('php://input'));
+        $atendimentoGateway = new AtendimentoDal();
+        echo json_encode($atendimentoGateway->obterQuantidadePorStatus($atendimento), JSON_PRETTY_PRINT);
+    }
+    
 }

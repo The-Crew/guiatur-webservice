@@ -229,5 +229,20 @@ class AtendimentoDal extends CI_Model {
                 $this->db->close();
         }
     }
+    
+    public function obterQuantidadePorStatus($atendimento_json) {
+        
+        $atendimento = Atendimento::fromJson($atendimento_json);
+            
+        // Conectando ao banco de dados
+        $this->load->database();
+
+        $this->db->select('COUNT(1) AS qtd');
+        $this->db->where('atd_status', $atendimento->getStatus());
+        //die(print_r($this->db->get_compiled_select('tb_atendimento')));
+        $query = $this->db->get('tb_atendimento');
+        
+        return (int)$query->result()[0]->qtd;
+    }
 
 }
