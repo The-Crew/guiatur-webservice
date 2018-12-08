@@ -55,3 +55,5 @@ $route['(:any)/(:any)'] = '$1Controller/$2';
 //$route['default_controller'] = 'Home';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+
+$route['default_controller'] = 'HomeController';
