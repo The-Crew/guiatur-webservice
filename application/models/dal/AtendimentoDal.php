@@ -100,19 +100,18 @@ class AtendimentoDal extends CI_Model {
         }
     }
 
-    public function listarNaoConcluidos($cliente_json) {
+    public function listarTodosNaoConcluidos() {
         try {
-
-            $cliente = Cliente::fromJson($cliente_json);
 
             // Conectando ao banco de dados
             $this->load->database();
 
             $this->db->select('*');
-            $this->db->where('cli_id', $cliente->getId());
-            $this->db->join('tb_servico', 'tb_atendimento.ser_id = tb_servico.ser_id');
             $this->db->where('atd_status', 'A');
-            //die(print_r($this->db->get_compiled_select('tb_atendimento')));
+            $this->db->join('tb_cliente', 'tb_atendimento.cli_id = tb_cliente.cli_id');
+            $this->db->join('tb_servico', 'tb_atendimento.ser_id = tb_servico.ser_id');
+            $this->db->join('tb_municipio', 'tb_atendimento.mun_id = tb_municipio.mun_id');
+            $this->db->join('tb_profissional', 'tb_atendimento.pro_id = tb_profissional.pro_id');
             $query = $this->db->get('tb_atendimento');
 
             $list = null;
@@ -123,10 +122,12 @@ class AtendimentoDal extends CI_Model {
 
                 $cliente = new Cliente();
                 $cliente->setId($row->cli_id);
+                $cliente->setNome($row->cli_nome);
                 $atendimento->setCliente($cliente->jsonSerialize());
 
                 $profissional = new Profissional();
                 $profissional->setId($row->pro_id);
+                $profissional->setNome($row->pro_nome);
                 $atendimento->setProfissional($profissional->jsonSerialize());
 
                 $servico = new Servico();
@@ -143,6 +144,78 @@ class AtendimentoDal extends CI_Model {
 
                 $municipio = new Municipio();
                 $municipio->setId($row->mun_id);
+                $municipio->setNome($row->mun_nome);
+                $atendimento->setMunicipio($municipio->jsonSerialize());
+
+                $atendimento->setStatus($row->atd_status);
+                $atendimento->setPreco($row->atd_preco);
+                $atendimento->setDesconto($row->atd_desconto);
+                $atendimento->setCustoAdicional($row->atd_custo_adicional);
+                $atendimento->setSituacao($row->atd_situacao_pagamento);
+                $atendimento->setCustoTransporte($row->atd_custo_transporte);
+                $atendimento->setObservacao($row->atd_observacao);
+                $atendimento->setAvaliacaoData($row->atd_avaliacao_data);
+                $atendimento->setAvaliacaoSatisfacao($row->atd_avaliacao_satisfacao);
+                $atendimento->setAvaliacaoComentario($row->atd_avaliacao_comentario);
+
+                $list[] = $atendimento->jsonSerialize();
+            }
+
+            return $list;
+
+        } finally {
+            if (isSet($this->db))
+                $this->db->close();
+        }
+    }
+
+    public function listarNaoConcluidos($cliente_json) {
+        try {
+
+            $cliente = Cliente::fromJson($cliente_json);
+
+            // Conectando ao banco de dados
+            $this->load->database();
+
+            $this->db->select('*');
+            $this->db->where('cli_id', $cliente->getId());
+            $this->db->join('tb_servico', 'tb_atendimento.ser_id = tb_servico.ser_id');
+            $this->db->join('tb_municipio', 'tb_atendimento.mun_id = tb_municipio.mun_id');
+            $this->db->join('tb_profissional', 'tb_atendimento.pro_id = tb_profissional.pro_id');
+            $this->db->where('atd_status', 'A');
+            //die(print_r($this->db->get_compiled_select('tb_atendimento')));
+            $query = $this->db->get('tb_atendimento');
+
+            $list = null;
+            foreach ($query->result() as $row)
+            {
+                $atendimento = new Atendimento();
+                $atendimento->setId($row->atd_id);
+
+                $cliente = new Cliente();
+                $cliente->setId($row->cli_id);
+                $atendimento->setCliente($cliente->jsonSerialize());
+
+                $profissional = new Profissional();
+                $profissional->setId($row->pro_id);
+                $profissional->setNome($row->pro_nome);
+                $atendimento->setProfissional($profissional->jsonSerialize());
+
+                $servico = new Servico();
+                $servico->setId($row->ser_id);
+                $servico->setDescricao($row->ser_descricao);
+                $atendimento->setServico($servico->jsonSerialize());
+
+                $atendimento->setDataAgendado($row->atd_data_agendado);
+                $atendimento->setDataRealizado($row->atd_data_realizado);
+                $atendimento->setDataCadastro($row->atd_data_cadastro);
+                $atendimento->setEndereco($row->atd_endereco);
+                $atendimento->setBairro($row->atd_bairro);
+                $atendimento->setCep($row->atd_cep);
+
+                $municipio = new Municipio();
+                $municipio->setId($row->mun_id);
+                $municipio->setNome($row->mun_nome);
                 $atendimento->setMunicipio($municipio->jsonSerialize());
 
                 $atendimento->setStatus($row->atd_status);
@@ -233,11 +306,11 @@ class AtendimentoDal extends CI_Model {
                 $this->db->close();
         }
     }
-    
+
     public function obterQuantidadePorStatus($atendimento_json) {
-        
+
         $atendimento = Atendimento::fromJson($atendimento_json);
-            
+
         // Conectando ao banco de dados
         $this->load->database();
 
@@ -245,8 +318,26 @@ class AtendimentoDal extends CI_Model {
         $this->db->where('atd_status', $atendimento->getStatus());
         //die(print_r($this->db->get_compiled_select('tb_atendimento')));
         $query = $this->db->get('tb_atendimento');
-        
+
         return (int)$query->result()[0]->qtd;
+    }
+
+    public function finalizar($atendimento_json) {
+        try {
+
+            $atendimento = Atendimento::fromJson($atendimento_json);
+            // Conectando ao banco de dados
+            $this->load->database();
+
+            $this->db->where('atd_id', $atendimento->getId());
+            $this->db->set('atd_status', 'R');
+
+            return $this->db->update('tb_atendimento');
+
+        } finally {
+            if (isSet($this->db))
+                $this->db->close();
+        }
     }
 
     public function cancelar($atendimento_json) {
